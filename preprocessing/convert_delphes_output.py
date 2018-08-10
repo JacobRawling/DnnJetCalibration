@@ -2,21 +2,28 @@
 
 """
 
-# import mljets as mj 
-import ROOT as r 
+import mljets as mj
+import ROOT as r
 from tqdm import tqdm
-r.gSystem.Load("/hepgpu3-data1/jrawling/MG5_aMC_v2_5_5/Delphes/libDelphes")
+
 
 def main():
-     # Construct the tchain of the input files
-    input_file = '/hepgpu3-data1/jrawling/MG5_aMC_v2_5_5/dijet_2/Events/run_03/tag_1_delphes_events.root'
-    chain = r.TChain('Delphes')
-    chain.AddFile(input_file)
+    # Construct the tchain of the input files
+    mj.load_delphes_library()
 
-    with tqdm(total=chain.GetEntries()) as progress_bar:
-        for e in chain:
-            progress_bar.update(1)
+    # Set up the conversion tool
+    delphes_convertor = mj.DelphsToCsv()
 
+    # Run the conversion
+    delphes_convertor.convert(
+        input_file='/hepgpu3-data1/jrawling/MG5_aMC_v2_5_5/dijet_2/Events/run_03/tag_1_delphes_events.root',
+        output_folder='/hepgpu3-data1/jrawling/deep_jets/csvs',
+        output_file_name='tag_1_delphes_jets.csv',
+        variables_to_save={
+            'jet_pt_0': 'Jet.PT[0]'
+            },  
+        selection='Jet_size>=1'
+        )
 
 
 main()
