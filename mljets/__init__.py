@@ -1,1 +1,1 @@
-from delphes_to_csv import load_delphes_library, DelphsToCsv
+from delphes_to_csv import load_delphes_library, convert_delphes_to_csv
