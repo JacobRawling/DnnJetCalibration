@@ -3,6 +3,24 @@ from mljets.models import feedforward_model
 import pandas as pd
 from sklearn.cross_validation import train_test_split
 import numpy as np
+import matplotlib
+matplotlib.use('agg')
+import matplotlib.pyplot as plt 
+
+
+def plot_roc_curve(fpr, tpr, output_folder, out_file):
+    plt.figure()
+    lw = 2
+    plt.plot(fpr, tpr, color='darkorange',
+             lw=lw, label='ROC curve (area = %0.2f)' % roc_auc[2])
+    plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Receiver operating characteristic example')
+    plt.legend(loc="lower right")
+    fig.savesfig(output_folder+out_file)
 
 def main():
     # Grab the model from our avaliable set of models
@@ -39,6 +57,7 @@ def main():
     Y_test_pred = model.predict(X_test)
     Y_train_pred = model.predict(X_train)
 
+
     # 
     out_test = np.concatenate( (X_test.values, Y_test.values, Y_test_pred), axis=1)
     df_test = pd.DataFrame(out_test,
@@ -53,9 +72,12 @@ def main():
                            )
     # Now save this 
     df_train.to_csv(in_file.replace('.csv','_train.csv'))
-    df_train.to_csv(in_file.replace('.csv','_test.csv'))
+    df_test.to_csv(in_file.replace('.csv','_test.csv'))
     
     print('Saving train data to:', in_file.replace('.csv','_train.csv'))
     print('Saving test data to:', in_file.replace('.csv','_test.csv'))
+
+
+
 
 main()
